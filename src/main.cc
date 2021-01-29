@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include "Entity.h"
+#include "Text.h"
 #include <ctime>
 #include <cmath>
 #include <fstream>
@@ -27,11 +28,9 @@ const int SCREEN_HEIGHT = 144;
 
 SDL_Window* g_window = nullptr;
 SDL_Renderer* g_renderer = nullptr;
-TTF_Font* g_font = nullptr;
-SDL_Texture* sampleText;
-SDL_Rect sampleTextRect;
 SDL_Texture* g_levelTexture;
 Vec2f* g_levelSize;
+TextHandler* textHandler;
 
 Entity* player;
 
@@ -143,10 +142,13 @@ void mainLoop() {
     // ======= RENDER
     SDL_SetRenderDrawColor(g_renderer, 0x33, 0x11, 0x46, 0xFF);
     SDL_RenderClear(g_renderer);
-    renderEntity(player, playerFlip);
+    // renderEntity(player, playerFlip);
 
     // text rendering
-    SDL_RenderCopy(g_renderer, sampleText, nullptr, &sampleTextRect);
+    textHandler->render(g_renderer, "Welcome to our game!", 38, 10);
+    textHandler->render(g_renderer, "This is another line!", 42, 20);
+    textHandler->render(g_renderer, "This is another line!", 42, 30);
+
     SDL_RenderPresent(g_renderer);
     //===== RENDER ENDS
 }
@@ -185,29 +187,8 @@ void initMusic() {
 }
 
 void initFont() {
-    g_font = TTF_OpenFont("assets/m3x6.ttf", 15);
-    if (g_font == nullptr) {
-        printf("Failed to load font! SDL_ttf error: %s\n", TTF_GetError());
-        exit(1);
-    }
-}
-
-void renderText(std::string txt) {
-    SDL_Color textColor = { 0xdc, 0xfe, 0xcf};
-    SDL_Surface* textSurface = TTF_RenderText_Solid(g_font, txt.c_str(), textColor);
-    if (textSurface == nullptr) {
-        printf("Unable to render surface! SDL_ttf error: %s\n", TTF_GetError());
-    } else {
-        sampleText = SDL_CreateTextureFromSurface(g_renderer, textSurface);
-        if (sampleText == nullptr) {
-            printf("Unable to create texture from rendered text! SDL_Error: %s\n", SDL_GetError());
-        } else {
-            sampleTextRect.x = 24;
-            sampleTextRect.y = 0;
-            sampleTextRect.w = textSurface->w;
-            sampleTextRect.h = textSurface->h;
-        }
-    }
+    textHandler = new TextHandler("assets/m3x6.ttf");
+    textHandler->setColor(0xdc, 0xfe, 0xcf);
 }
 
 int main(int argc, char** argv) {
@@ -216,7 +197,6 @@ int main(int argc, char** argv) {
     lastTime = currentTime = SDL_GetTicks();
     initEntities();
     initFont();
-    renderText("This is our GGJ2021 game!");
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(mainLoop, -1, 1);
 #else

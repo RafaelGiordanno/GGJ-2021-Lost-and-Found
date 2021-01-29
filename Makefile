@@ -1,6 +1,7 @@
 OBJS = src/main.cc \
 	src/Vec2f.cc \
-	src/Entity.cc
+	src/Entity.cc \
+	src/Text.cc
 
 CC = clang++
 WEBCC = em++
