@@ -21,6 +21,8 @@ void TextHandler::render(SDL_Renderer* renderer, std::string txt, int x = 0, int
     bool changed = (txt != lastText);
     if (changed) {
         lastText = txt;
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(sampleText);
         textSurface = TTF_RenderUTF8_Solid(g_font, txt.c_str(), textColor);
     }
     if (textSurface == nullptr) {

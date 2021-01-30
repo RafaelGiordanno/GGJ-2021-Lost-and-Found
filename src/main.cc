@@ -130,16 +130,11 @@ void renderEntity(Entity* ent, SDL_RendererFlip flip) {
         ent->angle, ent->center, flip);
 }
 
-void mainLoop() {
-    //===== TIME BEGINS
-    currentTime = SDL_GetTicks();
-    float dt = (currentTime - lastTime) / 1000.0f;
-    lastTime = currentTime;
-    //===== TIME ENDS
-
+void update(float dt) {
     handleInput();
+}
 
-    // ======= RENDER
+void render() {
     SDL_SetRenderDrawColor(g_renderer, 0x33, 0x11, 0x46, 0xFF);
     SDL_RenderClear(g_renderer);
     // renderEntity(player, playerFlip);
@@ -150,7 +145,27 @@ void mainLoop() {
     textHandler->render(g_renderer, "This is another line!", 42, 30);
 
     SDL_RenderPresent(g_renderer);
-    //===== RENDER ENDS
+}
+
+const float physicsDeltaTime = 1/60.f;
+float timeAccumulator = 0.0f;
+double totalGameTime = 0.0f;
+
+void mainLoop() {
+    //===== TIME BEGINS
+    currentTime = SDL_GetTicks();
+    float dt = (currentTime - lastTime) / 1000.0f;
+    lastTime = currentTime;
+    timeAccumulator += dt;
+    //===== TIME ENDS
+
+    while (timeAccumulator >= physicsDeltaTime) {
+        update(physicsDeltaTime);
+        printf("%lf\n", timeAccumulator);
+        timeAccumulator -= physicsDeltaTime;
+        totalGameTime += physicsDeltaTime;
+    }
+    render();
 }
 
 SDL_Texture* loadTexture(SDL_Renderer *renderer, std::string path) {
