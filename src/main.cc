@@ -23,8 +23,8 @@
 #endif
 
 int gameScale = 4;
-const int SCREEN_WIDTH = 160;
-const int SCREEN_HEIGHT = 144;
+const int SCREEN_WIDTH = 192;
+const int SCREEN_HEIGHT = 108;
 
 SDL_Window* g_window = nullptr;
 SDL_Renderer* g_renderer = nullptr;
@@ -161,7 +161,6 @@ void mainLoop() {
 
     while (timeAccumulator >= physicsDeltaTime) {
         update(physicsDeltaTime);
-        printf("%lf\n", timeAccumulator);
         timeAccumulator -= physicsDeltaTime;
         totalGameTime += physicsDeltaTime;
     }
