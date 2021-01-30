@@ -52,7 +52,7 @@ bool initSDL() {
         printf("SDL failed to initialize! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
-    g_window = SDL_CreateWindow("ZERG - Zero-Gravity Repair Guy",
+    g_window = SDL_CreateWindow("GGJ2021",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH * gameScale, SCREEN_HEIGHT * gameScale,
         SDL_WINDOW_SHOWN);

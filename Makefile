@@ -14,7 +14,7 @@ WEB_FLAGS = -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' 
 
 OBJ_NAME = build/linux/ggj2021
 WEB_NAME = build/web/ggj2021.html
-WIN_NAME = build/win/ggj2021.exe
+WIN_NAME = ggj2021.exe
 
 
 desktop: $(OBJS) 
