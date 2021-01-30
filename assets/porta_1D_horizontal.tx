@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <object name="porta_1D_horizontal" gid="54" width="8" height="8">
+  <properties>
+   <property name="parede" type="bool" value="false"/>
+  </properties>
+ </object>
+</template>
