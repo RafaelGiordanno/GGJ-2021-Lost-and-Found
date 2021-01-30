@@ -9,8 +9,8 @@ WINCC = g++
 
 COMPILER_FLAGS = -w
 
-LINKER_FLAGS = -lm -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_gfx
-WEB_FLAGS = -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s USE_SDL_MIXER=2 -s USE_SDL_TTF=2 -s USE_SDL_GFX=2 --preload-file assets/
+LINKER_FLAGS = -lm -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+WEB_FLAGS = -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s USE_SDL_MIXER=2 -s USE_SDL_TTF=2 --preload-file assets/
 
 OBJ_NAME = build/linux/ggj2021
 WEB_NAME = build/web/ggj2021.html
