@@ -14,6 +14,7 @@ Entity::Entity(float x, float y, int w, int h, float r) {
     this->currentFrameRect->h = h > 0 ? h : this->currentFrameRect->h;
     this->center = nullptr;
     this->totalFrames = 1;  
+    this->setFrameRate(1/24.0f);
 }
 
 bool Entity::assignTexture(SDL_Texture* commonTexture) {

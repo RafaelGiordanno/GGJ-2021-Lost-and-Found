@@ -21,6 +21,7 @@ public:
     bool assignTexture(SDL_Texture* commonTexture);
     void update(float);
     void setFrameRate(float);
+    void setTargetObject(std::string target);
 
     Vec2f* pos;
     Vec2f* startingPos;
@@ -32,6 +33,7 @@ public:
     SDL_Rect* outputFrameRect;
     SDL_Point* center;
     EntityType type;
+    std::string targetObjectString;
 
     int frame = 0;
     int totalFrames;

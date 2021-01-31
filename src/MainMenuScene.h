@@ -2,8 +2,9 @@
 #define MAIN_MENU_SCENE
 
 #include <SDL2/SDL.h>
+#include "AssetManager.h"
 #include "Input.h"
-#include "Text.h";
+#include "Text.h"
 
 class MainMenuScene {
 public:

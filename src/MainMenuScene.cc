@@ -1,7 +1,7 @@
 #include "MainMenuScene.h"
 
 MainMenuScene::MainMenuScene() {
-
+    
 }
 
 void MainMenuScene::update(float totalTime, float dt, Input* input) {

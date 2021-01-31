@@ -5,7 +5,8 @@ OBJS = src/main.cc \
 	src/MainGameScene.cc \
 	src/MainMenuScene.cc \
 	src/Input.cc \
-	src/AssetManager.cc
+	src/AssetManager.cc \
+	src/SheetMap.cc
 
 CC = clang++
 WEBCC = em++
