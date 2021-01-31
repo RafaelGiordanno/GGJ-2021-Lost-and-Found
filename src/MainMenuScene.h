@@ -1,13 +1,13 @@
-#ifndef MAIN_GAME_SCENE
-#define MAIN_GAME_SCENE
+#ifndef MAIN_MENU_SCENE
+#define MAIN_MENU_SCENE
 
 #include <SDL2/SDL.h>
 #include "Input.h"
 #include "Text.h";
 
-class MainGameScene {
+class MainMenuScene {
 public:
-    MainGameScene(int startingLevel = 0);
+    MainMenuScene();
     void update(float dt, float totalTime, Input* input);
     void render(SDL_Renderer* mainRenderer, TextHandler* textHandler);
     bool isFinished();

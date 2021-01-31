@@ -2,7 +2,10 @@ OBJS = src/main.cc \
 	src/Vec2f.cc \
 	src/Entity.cc \
 	src/Text.cc \
-	src/MainGameScene.cc
+	src/MainGameScene.cc \
+	src/MainMenuScene.cc \
+	src/Input.cc \
+	src/AssetManager.cc
 
 CC = clang++
 WEBCC = em++

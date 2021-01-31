@@ -30,15 +30,45 @@
          "draworder":"topdown",
          "id":3,
          "name":"objectsLayer",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":54,
+                 "height":8,
+                 "id":4,
+                 "name":"door_01",
+                 "rotation":0,
+                 "type":"3t_horizontal",
+                 "visible":true,
+                 "width":24,
+                 "x":64,
+                 "y":32
+                }, 
+                {
+                 "gid":197,
+                 "height":8,
+                 "id":5,
+                 "name":"buttonTop",
+                 "properties":[
+                        {
+                         "name":"doorId",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "rotation":0,
+                 "type":"door_01",
+                 "visible":true,
+                 "width":8,
+                 "x":64,
+                 "y":80
+                }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":4,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.4.3",

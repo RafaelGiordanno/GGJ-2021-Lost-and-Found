@@ -18,7 +18,6 @@ enum EntityType {
 class Entity {
 public:
     Entity(float x = 0.0f, float y = 0.0f, int w = 16.0f, int h = 16.0f, float r = 16.0f);
-    bool loadTexture(SDL_Renderer*, std::string);
     bool assignTexture(SDL_Texture* commonTexture);
     void update(float);
     void setFrameRate(float);
