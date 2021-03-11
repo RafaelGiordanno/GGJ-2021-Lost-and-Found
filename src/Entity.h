@@ -12,7 +12,8 @@ enum ItemDirection {
 enum EntityType {
     t_PLAYER, t_HANDLE, t_BUTTON, t_DOOR, 
     t_VERTICAL_PLATFORM, t_HORIZONTAL_PLATFORM,
-    t_BUTTON_PLATFORM, t_DIRECTION_ARROW
+    t_BUTTON_PLATFORM, t_DIRECTION_ARROW,
+    t_CHECKPOINT
 };
 
 class Entity {

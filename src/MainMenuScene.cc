@@ -4,8 +4,8 @@ MainMenuScene::MainMenuScene() {
     
 }
 
-void MainMenuScene::update(float totalTime, float dt, Input* input) {
-    handleInput(input);
+void MainMenuScene::update(float totalTime, float dt) {
+    handleInput();
 }
 
 void MainMenuScene::render(SDL_Renderer* mainRenderer, TextHandler* textHandler) {
@@ -17,10 +17,9 @@ bool MainMenuScene::isFinished() {
     return finished;
 }
 
-void MainMenuScene::handleInput(Input* input) {
-    SDL_Event e;
+void MainMenuScene::handleInput() {
     // event handling
-    if (input->getKeyDown(Input::ACCEPT)) {
+    if (sm.input->getKeyDown(Input::ACCEPT)) {
         printf("Start thsi game lareayde??\n");
         finished = true;
     }

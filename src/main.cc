@@ -66,15 +66,12 @@ MainMenuScene* mainMenuScene;
 
 bool pauseGame = false;
 
-// AssetManager assetManager;
-std::unordered_map<std::string, Entity*> levelObjects;
-
 bool initSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL failed to initialize! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
-    g_window = SDL_CreateWindow("GGJ2021",
+    g_window = SDL_CreateWindow("SR-7 - GGJ2021",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH * gameScale, SCREEN_HEIGHT * gameScale,
         SDL_WINDOW_SHOWN);
@@ -177,8 +174,8 @@ void handleInput() {
 }
 
 void renderEntity(Entity* ent, SDL_RendererFlip flip) {
-    g_fillRect.x = ent->outputFrameRect->x;
-    g_fillRect.y = ent->outputFrameRect->y;
+    g_fillRect.x = ent->outputFrameRect->x - sm.cameraPosition.x;
+    g_fillRect.y = ent->outputFrameRect->y - sm.cameraPosition.y;
     g_fillRect.w = ent->outputFrameRect->w;
     g_fillRect.h = ent->outputFrameRect->h;
     SDL_RenderCopyEx(g_renderer, ent->m_texture, ent->currentFrameRect, &g_fillRect,
@@ -196,37 +193,11 @@ void update(float dt) {
     handleInput();
     if (pauseGame) return;
 
-    sm.playerBodyRect.x = sm.player->pos->x;
-    sm.playerBodyRect.y = sm.player->pos->y;
-    sm.playerBodyRect.w = sm.player->currentFrameRect->w;
-    sm.playerBodyRect.h = sm.player->currentFrameRect->h;
-
-    sm.player->pos->x += sm.player->vel->x;
-    sm.player->pos->y += sm.player->vel->y;
-    sm.player->pos->x = clamp(sm.player->pos->x, 0, SCREEN_WIDTH);
-    sm.player->pos->y = clamp(sm.player->pos->y, 0, SCREEN_HEIGHT);
-    sm.player->frame = 0;
-    sm.player->update(dt);
-
-    for (auto obj : levelObjects) {
-    //   cout << x.first << " " << x.second << endl; 
-        obj.second->pos->x += obj.second->vel->x;
-        obj.second->pos->y += obj.second->vel->y;
-        obj.second->pos->x = clamp(obj.second->pos->x, 0, SCREEN_WIDTH);
-        obj.second->pos->y = clamp(obj.second->pos->y, 0, SCREEN_HEIGHT);
-        obj.second->frameTime += dt;
-        if (obj.second->frameTime > obj.second->frameRate) {
-            obj.second->frameTime = 0;
-            obj.second->frame = (obj.second->frame + 1) % obj.second->totalFrames;
-        }
-        obj.second->update(dt);
-     }
-
     // GAME STRUCTURE
     // - MENU (global, ruled by the main file)
     if (currentSceneIndex == INDEX_MAIN_MENU) {
         totalGameTime = 0.0f;
-        mainMenuScene->update(totalGameTime, dt, sm.input);
+        mainMenuScene->update(totalGameTime, dt);
         if (mainMenuScene->isFinished()) {
             printf("Main Menu Scene finished! Going to the next scene!\n");
             currentSceneIndex++;
@@ -237,11 +208,12 @@ void update(float dt) {
     // - INTRO CUTSCENE (go to this scene)
     if (currentSceneIndex == INDEX_INTRO_CUTSCENE) {
         totalGameTime = 0.0f;
+        currentSceneIndex++;
         return;
     }
     // - LEVELS (all levels are in another scene)
     if (currentSceneIndex == INDEX_MAIN_GAME) {
-        mainGameScene->update(totalGameTime, dt, sm.input);
+        mainGameScene->update(totalGameTime, dt, sm);
         if (mainGameScene->isFinished()) {
             printf("Main Menu Scene finished! Going to the next scene!\n");
             currentSceneIndex++;
@@ -269,11 +241,11 @@ void renderLevelTiles() {
     g_fillRect.h = tileSize;
     // TODO limit tile rendering to visible tiles only
     for (int i = 0; i < sm.collidableTiles.size(); i++) {
-        g_fillRect.y = i * tileSize; // - cameraPosition.x;
+        g_fillRect.y = i * tileSize - sm.cameraPosition.y;
         for (int k = 0; k < sm.collidableTiles[i].size(); k++) {
             if (!sm.collidableTiles[i][k]) continue;
             // printf("values: i: %d k: %d\n", i, k);
-            g_fillRect.x = k * tileSize; // - cameraPosition.y;
+            g_fillRect.x = k * tileSize - sm.cameraPosition.x;
             tilePosition->x = ((sm.collidableTiles[i][k] - 1) % tw) * tileSize;
             tilePosition->y = ((sm.collidableTiles[i][k] - 1) / tw) * tileSize;
             // printf("collidableTiles[%d][%d] %d \ntilePosition x %d y %d\n\n", i, k, collidableTiles[i][k], tilePosition->x, tilePosition->y);
@@ -288,11 +260,11 @@ void render() {
     SDL_RenderClear(g_renderer);
 
     renderLevelTiles();
-    for (auto obj : levelObjects) {
+    for (auto obj : sm.levelObjects) {
         renderEntity(obj.second, SDL_FLIP_NONE);
     }
-    // renderEntity(player, playerFlip);
-    // renderEntity(levelObjects["door_01"], playerFlip);
+    renderEntity(sm.player, sm.playerFlip);
+    renderEntity(sm.directionArrow, SDL_FLIP_NONE);
 
     // - MENU (global, ruled by the main file)
     if (currentSceneIndex == INDEX_MAIN_MENU) {
@@ -350,6 +322,14 @@ void initEntities() {
     sm.player->type = t_PLAYER;
     sm.player->setFrameRate(1 / 12.f);
     sm.player->assignTexture(AssetManager::getInstance().getTexture(g_renderer, "assets/astronaut.png"));
+
+    sm.directionArrow = new Entity(76, 24, 20, 8);
+    sm.directionArrow->type = t_DIRECTION_ARROW;
+    sm.directionArrow->setFrameRate(1 / 12.f);
+    sm.directionArrow->assignTexture(AssetManager::getInstance().getTexture(g_renderer, "assets/arrow.png"));
+    sm.directionArrow->center = new SDL_Point();
+    sm.directionArrow->center->x = 0;
+    sm.directionArrow->center->y = sm.directionArrow->currentFrameRect->h / 2;
 }
 
 void initMusic() {
@@ -405,8 +385,9 @@ void initMap() {
         int height = objectsArray[k]["height"].get<int>();
         if (name.find("door") != std::string::npos) {
             // create new entity based on the name "door_" + type
-            levelObjects[name] = new Entity(x, y - height, width, height);
-            levelObjects[name]->assignTexture(AssetManager::getInstance().getTexture(g_renderer, std::string("assets/door_").append(type).append(".png")));
+            sm.levelObjects[name] = new Entity(x, y - height, width, height);
+            sm.levelObjects[name]->type = t_DOOR;
+            sm.levelObjects[name]->assignTexture(AssetManager::getInstance().getTexture(g_renderer, std::string("assets/door_").append(type).append(".png")));
         } else if (name.find("button") != std::string::npos) {
             std::string fileName = "assets/button_top.png";
             if (name.find("top") != std::string::npos) {
@@ -422,15 +403,19 @@ void initMap() {
                 fileName = "assets/button_left.png";
             }
             y -= height;
-            levelObjects[name] = new Entity(x, y, width, height);
-            levelObjects[name]->assignTexture(AssetManager::getInstance().getTexture(g_renderer, std::string(fileName)));
-            levelObjects[name]->targetObjectString = type;
+            sm.levelObjects[name] = new Entity(x, y, width, height);
+            sm.levelObjects[name]->assignTexture(AssetManager::getInstance().getTexture(g_renderer, std::string(fileName)));
+            sm.levelObjects[name]->type = t_BUTTON;
+            sm.levelObjects[name]->targetObjectString = type;
+        } else if (name.find("checkpoint") != std::string::npos) {
+            sm.levelObjects[name] = new Entity(x, y - height, width, height);
+            sm.levelObjects[name]->type = t_CHECKPOINT;
+            sm.levelObjects[name]->targetObjectString = type;
         }
     }
 }
 
 void initScenes() {
-    sm.input = new Input();
     mainMenuScene = new MainMenuScene();
     mainGameScene = new MainGameScene(0);
 }
@@ -445,7 +430,6 @@ int main(int argc, char** argv) {
     initMap();
     initMusic();
     initScenes();
-    Mix_Volume(-1, currentVolume);
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(mainLoop, -1, 1);
 #else

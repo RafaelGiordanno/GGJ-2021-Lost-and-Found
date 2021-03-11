@@ -5,18 +5,20 @@
 #include "AssetManager.h"
 #include "Input.h"
 #include "Text.h"
+#include "SheetMap.h"
 
 class MainMenuScene {
 public:
     MainMenuScene();
-    void update(float dt, float totalTime, Input* input);
+    void update(float dt, float totalTime);
     void render(SDL_Renderer* mainRenderer, TextHandler* textHandler);
     bool isFinished();
     void resetScene();
 private:
     bool finished = false;
+    SheetMap sm = SheetMap::getInstance();
 
-    void handleInput(Input* input);
+    void handleInput();
 };
 
 #endif // MAIN_GAME_SCENE
